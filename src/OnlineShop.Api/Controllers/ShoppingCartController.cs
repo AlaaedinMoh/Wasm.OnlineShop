@@ -19,7 +19,7 @@ namespace OnlineShop.Api.Controllers
         }
 
         [HttpGet]
-        [Route("{userId/GetItems}")]
+        [Route("{userId}/GetItems")]
         public async Task<ActionResult<IEnumerable<CartItemDto>>> GetItems(int userId)
         {
             try
@@ -37,10 +37,9 @@ namespace OnlineShop.Api.Controllers
                 IEnumerable<CartItemDto> cartItemsDto = dbContext.CartItems.ConvertToDto(dbContext.Products);
                 return Ok(cartItemsDto);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
@@ -60,8 +59,7 @@ namespace OnlineShop.Api.Controllers
             }
             catch (Exception ex)
             {
-
-                throw;
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
     }
