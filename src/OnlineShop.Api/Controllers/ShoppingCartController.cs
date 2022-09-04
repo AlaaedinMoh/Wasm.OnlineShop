@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using OnlineShop.Api.Data;
 using OnlineShop.Api.Entities;
 using OnlineShop.Api.Extensions;
@@ -28,7 +29,7 @@ namespace OnlineShop.Api.Controllers
                     return NotFound();
                 if (dbContext.CartItems.Any())
                     return NotFound();
-                if(dbContext.Products is null)
+                if (dbContext.Products is null)
                 {
                     throw new Exception("No Products to show");
                 }
@@ -61,6 +62,54 @@ namespace OnlineShop.Api.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<CartItemDto>> AddItem([FromBody] CartItemToAddDto cartItemToAdd)
+        {
+            try
+            {
+                CartItem? newItem = await DoAddCartItemAsync(cartItemToAdd);
+                if (newItem is null)
+                    return NoContent();
+                Product product = dbContext.Products.Find(newItem.ProductId);
+                if (product is null)
+                    throw new Exception($"Somwthing went wrong when attempting tp retrieve product (productId:({cartItemToAdd.ProductId}))");
+                CartItemDto newItemDto = newItem.ConvertToDto(product);
+                return CreatedAtAction(nameof(GetCartItem), new { id = newItemDto.Id }, newItemDto);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        private async Task<bool> CartItemExists(int cartId, int productId)
+        {
+            return await this.dbContext.CartItems.AnyAsync(c => c.CartId == cartId &&
+                                                                     c.ProductId == productId);
+        }
+
+        private async Task<CartItem> DoAddCartItemAsync(CartItemToAddDto cartItemToAdd)
+        {
+            if (!await CartItemExists(cartItemToAdd.CartId, cartItemToAdd.ProductId))
+            {
+                var item = await (from product in this.dbContext.Products
+                                  where product.Id == cartItemToAdd.ProductId
+                                  select new CartItem
+                                  {
+                                      CartId = cartItemToAdd.CartId,
+                                      ProductId = product.Id,
+                                      Quantity = cartItemToAdd.Quantity
+                                  }).SingleOrDefaultAsync();
+                if (item is not null)
+                {
+                    var result = await dbContext.CartItems.AddAsync(item);
+                    await this.dbContext.SaveChangesAsync();
+                    return result.Entity;
+                }
+            }
+            return null;
         }
     }
 }
