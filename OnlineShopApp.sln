@@ -5,9 +5,9 @@ VisualStudioVersion = 17.1.32421.90
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineShop.Wasm", "src\OnlineShop.Wasm\OnlineShop.Wasm.csproj", "{E2D88660-3A8C-4637-A700-F1516C1D0ECF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineShop.Api", "src\OnlineShop.Api\OnlineShop.Api.csproj", "{1BA2C031-6EF0-4298-8074-799697DBE111}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineShop.Api", "src\OnlineShop.Api\OnlineShop.Api.csproj", "{1BA2C031-6EF0-4298-8074-799697DBE111}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineShop.Shared", "src\OnlineShop.Shared\OnlineShop.Shared.csproj", "{55425045-5941-4114-8462-0C1FBD87A52A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineShop.Shared", "src\OnlineShop.Shared\OnlineShop.Shared.csproj", "{55425045-5941-4114-8462-0C1FBD87A52A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

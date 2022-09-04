@@ -13,10 +13,19 @@ namespace OnlineShop.Wasm.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            products = await ProductService?.GetProducts();
+            try
+            {
+                products = await ProductService?.GetProducts();
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
+            }
         }
 
-        private IOrderedEnumerable<IGrouping<int, ProductDto >> GetGroupdedProductsByCategory()
+        private IOrderedEnumerable<IGrouping<int, ProductDto>> GetGroupdedProductsByCategory()
         {
             return from product in products
                    group product by product.CategoryId into prodByCatGroup
