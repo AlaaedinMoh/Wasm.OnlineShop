@@ -5,13 +5,11 @@ using System.Net.Http.Json;
 
 namespace OnlineShop.Wasm.Services
 {
-    public class ProductService : IProductService
+    public class ProductService : ServiceBase, IProductService
     {
-        private readonly HttpClient httpClient;
 
-        public ProductService(HttpClient httpClient)
+        public ProductService(HttpClient httpClient) : base(httpClient)
         {
-            this.httpClient = httpClient;
         }
 
         public async Task<IEnumerable<ProductDto>> GetProducts()
@@ -37,19 +35,6 @@ namespace OnlineShop.Wasm.Services
             {
                 throw;
             }
-        }
-
-        private async Task<T> SendRequest<T>(string url)
-        {
-            HttpResponseMessage response = await httpClient.GetAsync(url);
-            if (response.IsSuccessStatusCode)
-            {
-                if (response.StatusCode.Equals(HttpStatusCode.NoContent))
-                    return default(T);
-                return await response.Content.ReadFromJsonAsync<T>();
-            }
-            var error = await response.Content.ReadAsStringAsync();
-            throw new HttpRequestException(error);
         }
     }
 }

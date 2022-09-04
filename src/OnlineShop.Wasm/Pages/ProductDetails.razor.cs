@@ -9,6 +9,9 @@ namespace OnlineShop.Wasm.Pages
         [Inject]
         private IProductService productService { get; set; }
 
+        [Inject]
+        private IShoppingCartService shoppingService { get; set; }
+
         private ProductDto product;
 
         [Parameter]
@@ -25,6 +28,19 @@ namespace OnlineShop.Wasm.Pages
             catch (Exception ex)
             {
                 ErrorMessage = ex.Message;
+            }
+        }
+
+        protected async Task AddToCartClick(CartItemToAddDto itemToAdd)
+        {
+            try
+            {
+                CartItemDto cartItem = await shoppingService.AddCartItem(itemToAdd);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
             }
         }
     }

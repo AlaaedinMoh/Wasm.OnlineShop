@@ -23,7 +23,14 @@ else
                     @product.Price.ToString("C")&nbsp;(@product.Quantity items in stock)
                 </b>
             </p>
-            <button class="btn btn-success" role="button">Add to Cart</button>
-    </div>
+            <button class="btn btn-success" role="button"
+                @onclick="()=>(AddToCartClick(new CartItemToAddDto{
+                    CartId = 1,
+                    Quantity = 1,
+                    ProductId = product.Id
+                }))">
+                Add to Cart
+            </button>
+        </div>
     </div>
 }
